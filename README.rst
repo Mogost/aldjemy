@@ -2,7 +2,7 @@
 Aldjemy
 =======
 
-|circleci_build| |pypi_version| |pypi_license|
+|travis_build| |pypi_version| |pypi_license|
 
 -----
 
@@ -99,8 +99,8 @@ metaclass:
 The result is same as with the example above, only you didn't need to
 create the mixin class at all.
 
-.. |circleci_build| image:: https://circleci.com/gh/Deepwalker/aldjemy.svg?style=shield
-    :target: https://circleci.com/gh/Deepwalker/aldjemy
+.. |travis_build| image:: https://travis-ci.org/Deepwalker/aldjemy.svg?branch=master
+    :target: https://travis-ci.org/Deepwalker/aldjemy
     :alt: Build status
 
 .. |pypi_version| image:: https://img.shields.io/pypi/v/aldjemy.svg?style=flat-square

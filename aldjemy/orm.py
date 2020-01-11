@@ -170,8 +170,8 @@ def construct_models(metadata):
 
 class BaseSQLAModel:
     @classmethod
-    def query(cls, *a, **kw):
+    def query(cls, *args, **kwargs):
         alias = getattr(cls, 'alias', 'default')
         if a or kw:
-            return get_session(alias).query(*a, **kw)
+            return get_session(alias).query(*args, **kwargs)
         return get_session(alias).query(cls)

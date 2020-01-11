@@ -15,13 +15,12 @@ __all__ = ['get_engine', 'get_meta']
 
 
 class CacheType(type):
-
-    def __getattribute__(cls, name):
+    def __getattribute__(self, name):
         if name == 'models':
             warnings.warn('Cache.models attribute is deprecated. '
                           'Use Cache.sa_models instead.',
                           DeprecationWarning, stacklevel=2)
-        return type.__getattribute__(cls, name)
+        return type.__getattribute__(self, name)
 
 
 class Cache(metaclass=CacheType):
