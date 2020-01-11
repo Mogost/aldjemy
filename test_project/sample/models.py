@@ -34,8 +34,7 @@ class Review(models.Model):
     book = models.ForeignKey('a_sample.BookProxy', on_delete=models.CASCADE)
 
 
-from six import with_metaclass
-class Log(with_metaclass(AldjemyMeta, models.Model)):
+class Log(with_metaclass(models.Model, metaclass=AldjemyMeta)):
     _DATABASE = 'logs'
 
     record = models.CharField(max_length=100)
