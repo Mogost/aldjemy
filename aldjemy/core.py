@@ -25,7 +25,7 @@ class CacheType(type):
         return type.__getattribute__(cls, name)
 
 
-class Cache(object):
+class Cache:
     """Module level cache"""
     __metaclass__ = CacheType
     engines = {}

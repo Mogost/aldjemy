@@ -73,7 +73,7 @@ To integrate it with aldjemy models you can put these methods into a separate mi
 
 .. code-block:: python
 
-    class TaskMixin(object):
+    class TaskMixin:
         def __str__(self):
             return self.code
 

@@ -180,7 +180,7 @@ def construct_models(metadata):
     return sa_models_by_django_models
 
 
-class BaseSQLAModel(object):
+class BaseSQLAModel:
     @classmethod
     def query(cls, *a, **kw):
         alias = getattr(cls, 'alias', 'default')

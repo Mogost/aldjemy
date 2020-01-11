@@ -1,7 +1,7 @@
 import django
 
 
-class LogsRouter(object):
+class LogsRouter:
     ALIAS = 'logs'
 
     def use_logs(self, model):
