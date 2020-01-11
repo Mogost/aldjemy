@@ -1,7 +1,3 @@
-import sys
-if sys.version_info[0] == 3:
-    unicode = str
-
 import django
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -89,7 +85,7 @@ class AldjemyMetaTests(TestCase):
         Log.objects.create(record='foo')
 
         foo = Log.sa.query().one()
-        self.assertEqual(unicode(foo), 'foo')
+        self.assertEqual(str(foo), 'foo')
         self.assertEqual(foo.reversed_record, 'oof')
         self.assertFalse(hasattr(foo, 'this_is_not_copied'))
 
