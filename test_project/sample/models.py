@@ -40,9 +40,6 @@ class Log(with_metaclass(AldjemyMeta, models.Model)):
 
     record = models.CharField(max_length=100)
 
-    def __unicode__(self):
-        return self.record
-
     def __str__(self):
         return self.record
 

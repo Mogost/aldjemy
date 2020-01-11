@@ -67,14 +67,14 @@ Mixins
 ------
 
 Often django models have helper function and properties that helps to
-represent the model's data (`__unicode__`), or represent some model based logic.
+represent the model's data (`__str__`), or represent some model based logic.
 
 To integrate it with aldjemy models you can put these methods into a separate mixin:
 
 .. code-block:: python
 
     class TaskMixin(object):
-        def __unicode__(self):
+        def __str__(self):
             return self.code
 
     class Task(TaskMixin, models.Model):
@@ -95,7 +95,7 @@ metaclass:
     class Task(models.Model):
         code = models.CharField(_('code'), max_length=32, unique=True)
 
-        def __unicode__(self):
+        def __str__(self):
             return self.code
 
         __metaclass__ = AldjemyMeta
