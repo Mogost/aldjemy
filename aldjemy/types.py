@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import django
 from sqlalchemy import types, ForeignKey
 
