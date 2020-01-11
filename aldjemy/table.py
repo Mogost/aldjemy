@@ -3,12 +3,8 @@
 from sqlalchemy import types, Column, Table
 
 import django
+from django.apps import apps
 from django.conf import settings
-try:
-    from django.apps import apps as django_apps
-except ImportError:
-    from django.db.models.loading import AppCache
-    django_apps = AppCache()
 
 from aldjemy.types import simple, foreign_key, varchar
 from aldjemy import postgres
@@ -52,7 +48,7 @@ DATA_TYPES.update(getattr(settings, 'ALDJEMY_DATA_TYPES', {}))
 
 
 def get_all_django_models():
-    models = django_apps.get_models()
+    models = apps.get_models()
     # Get M2M models
     new_models = []
     for model in models:

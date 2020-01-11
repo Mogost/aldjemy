@@ -1,3 +1,4 @@
+import time
 import warnings
 from collections import deque
 from django.db import connections
@@ -8,8 +9,6 @@ from sqlalchemy.pool import _ConnectionRecord as _ConnectionRecordBase
 
 from .wrapper import Wrapper
 from .sqlite import SqliteWrapper
-
-import time
 
 
 __all__ = ['get_engine', 'get_meta']
@@ -25,9 +24,8 @@ class CacheType(type):
         return type.__getattribute__(cls, name)
 
 
-class Cache:
+class Cache(metaclass=CacheType):
     """Module level cache"""
-    __metaclass__ = CacheType
     engines = {}
 
 
@@ -35,7 +33,6 @@ SQLALCHEMY_ENGINES = {
     'sqlite3': 'sqlite',
     'mysql': 'mysql',
     'postgresql': 'postgresql',
-    'postgresql_psycopg2': 'postgresql+psycopg2',
     'oracle': 'oracle',
 }
 SQLALCHEMY_ENGINES.update(getattr(settings, 'ALDJEMY_ENGINES', {}))
@@ -74,7 +71,7 @@ def get_meta():
 
 class DjangoPool(NullPool):
     def __init__(self, alias, *args, **kwargs):
-        super(DjangoPool, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.alias = alias
 
     def status(self):
@@ -108,6 +105,7 @@ class _ConnectionRecord(_ConnectionRecordBase):
         #pool.dispatch.first_connect.exec_once(self.connection, self)
         pool.dispatch.connect(self.connection, self)
         self.wrap = True
+        # TODO: Check. super call is missed?
 
     @property
     def connection(self):

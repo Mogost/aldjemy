@@ -12,6 +12,7 @@ class AldjemyMeta(ModelBase):
             if callable(attr) or isinstance(attr, property):
                 aldjemy_attrs[attr_name] = attr
 
+        # TODO: Check. object is steel needed?
         new_class.aldjemy_mixin = type(
             'AldjemyMixin_' + name, (object,),
             aldjemy_attrs,

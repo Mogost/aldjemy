@@ -90,29 +90,14 @@ metaclass:
 
 .. code-block:: python
 
-    from aldjemy.meta import AldjemyMeta
-
-    class Task(models.Model):
-        code = models.CharField(_('code'), max_length=32, unique=True)
-
-        def __str__(self):
-            return self.code
-
-        __metaclass__ = AldjemyMeta
-
-The result is same as with the example above, only you didn't need to
-create the mixin class at all.
-
-Also note that with Python 3, the syntax is a bit different:
-
-.. code-block:: python
-
     class Task(models.Model, metaclass=AldjemyMeta):
         code = models.CharField(_('code'), max_length=32, unique=True)
 
         def __str__(self):
             return self.code
 
+The result is same as with the example above, only you didn't need to
+create the mixin class at all.
 
 .. |circleci_build| image:: https://circleci.com/gh/Deepwalker/aldjemy.svg?style=shield
     :target: https://circleci.com/gh/Deepwalker/aldjemy

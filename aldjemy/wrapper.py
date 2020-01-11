@@ -1,6 +1,7 @@
 class Wrapper:
     "Wrapper to disable commit in sqla"
     def __init__(self, obj):
+        # TODO: Check. super call is missed?
         self.obj = obj
 
     def __getattr__(self, attr):
