@@ -112,8 +112,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 
-if django.VERSION >= (1, 8):
-    MIDDLEWARE_CLASSES.append('django.contrib.auth.middleware.SessionAuthenticationMiddleware')
+MIDDLEWARE_CLASSES.append('django.contrib.auth.middleware.SessionAuthenticationMiddleware')
 
 
 ROOT_URLCONF = 'sample.urls'

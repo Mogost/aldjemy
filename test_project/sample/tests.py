@@ -25,10 +25,7 @@ class SimpleTest(TestCase):
 
         # Automatic Many to Many fields get the ``sa`` property
         books_field = Author._meta.get_field('books')
-        if django.VERSION < (1, 9):
-            self.assertTrue(books_field.rel.through.sa)
-        else:
-            self.assertTrue(books_field.remote_field.through.sa)
+        self.assertTrue(books_field.remote_field.through.sa)
 
     def test_engine_override_test(self):
         from aldjemy import core
@@ -116,10 +113,7 @@ class CustomMetaDataTests(TestCase):
         """Make sure recursive through tables work."""
         from sample.models import Person
         through_field = Person._meta.get_field('parents')
-        if django.VERSION < (1, 9):
-            through = through_field.rel.through
-        else:
-            through = through_field.remote_field.through
+        through = through_field.remote_field.through
 
         metadata = MetaData(schema='unique')
         sa_models = construct_models(metadata)
@@ -130,10 +124,7 @@ class CustomMetaDataTests(TestCase):
         """Make sure aliased recursive through tables work."""
         from sample.models import Person
         through_field = Person._meta.get_field('parents')
-        if django.VERSION < (1, 9):
-            through = through_field.rel.through
-        else:
-            through = through_field.remote_field.through
+        through = through_field.remote_field.through
 
         metadata = MetaData(schema='unique')
         sa_models = construct_models(metadata)
