@@ -1,12 +1,14 @@
 class Wrapper:
-    "Wrapper to disable commit in sqla"
+    """Wrapper to disable commit in sqla"""
+
     def __init__(self, obj):
         # TODO: Check. super call is missed?
         self.obj = obj
 
     def __getattr__(self, attr):
         if attr in ['commit', 'rollback']:
-            return nullop
+            return lambda *args, **kwargs: None
+        # TODO: Fix getattr is not safer than self.obj.attr
         obj = getattr(self.obj, attr)
         if attr not in ['cursor', 'execute']:
             return obj
@@ -15,13 +17,9 @@ class Wrapper:
         return self.wrapper(obj)
 
     def wrapper(self, obj):
-        "Implement if you need to make your customized wrapper"
+        """Implement if you need to make your customized wrapper"""
         return obj
 
     def __call__(self, *args, **kwargs):
         self.obj = self.obj(*args, **kwargs)
         return self
-
-
-def nullop(*args, **kwargs):
-    return

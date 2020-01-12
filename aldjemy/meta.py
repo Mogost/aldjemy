@@ -2,7 +2,7 @@ from django.db.models.base import ModelBase
 
 
 class AldjemyMeta(ModelBase):
-    '''Add methods and properties to the SQLAlchemy mapping'''
+    """Add methods and properties to the SQLAlchemy mapping"""
 
     def __new__(cls, name, bases, attrs, **kwds):
         new_class = ModelBase.__new__(cls, name, bases, attrs, **kwds)

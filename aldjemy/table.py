@@ -1,41 +1,38 @@
-#! /usr/bin/env python
-
-from sqlalchemy import types, Column, Table
-
-import django
 from django.apps import apps
 from django.conf import settings
+from sqlalchemy import types, Column, Table
 
-from aldjemy.types import simple, foreign_key, varchar
 from aldjemy import postgres
+from aldjemy.types import simple, foreign_key, varchar
 
 
 DATA_TYPES = {
-    'AutoField':         simple(types.Integer),
-    'BigAutoField':      simple(types.BigInteger),
-    'BooleanField':      simple(types.Boolean),
-    'CharField':         varchar,
+    'AutoField': simple(types.Integer),
+    'BigAutoField': simple(types.BigInteger),
+    'BooleanField': simple(types.Boolean),
+    'CharField': varchar,
     'CommaSeparatedIntegerField': varchar,
-    'DateField':         simple(types.Date),
-    'DateTimeField':     simple(types.DateTime),
-    'DecimalField':      lambda x: types.Numeric(scale=x.decimal_places,
-                                                 precision=x.max_digits),
-    'DurationField':     simple(types.Interval),
-    'FileField':         varchar,
-    'FilePathField':     varchar,
-    'FloatField':        simple(types.Float),
-    'IntegerField':      simple(types.Integer),
-    'BigIntegerField':   simple(types.BigInteger),
-    'IPAddressField':    lambda field: types.CHAR(length=15),
-    'NullBooleanField':  simple(types.Boolean),
-    'OneToOneField':     foreign_key,
-    'ForeignKey':        foreign_key,
+    'DateField': simple(types.Date),
+    'DateTimeField': simple(types.DateTime),
+    'DecimalField': lambda field: types.Numeric(
+        scale=field.decimal_places, precision=field.max_digits
+    ),
+    'DurationField': simple(types.Interval),
+    'FileField': varchar,
+    'FilePathField': varchar,
+    'FloatField': simple(types.Float),
+    'IntegerField': simple(types.Integer),
+    'BigIntegerField': simple(types.BigInteger),
+    'IPAddressField': lambda field: types.CHAR(length=15),
+    'NullBooleanField': simple(types.Boolean),
+    'OneToOneField': foreign_key,
+    'ForeignKey': foreign_key,
     'PositiveIntegerField': simple(types.Integer),
     'PositiveSmallIntegerField': simple(types.SmallInteger),
-    'SlugField':         varchar,
+    'SlugField': varchar,
     'SmallIntegerField': simple(types.SmallInteger),
-    'TextField':         simple(types.Text),
-    'TimeField':         simple(types.Time),
+    'TextField': simple(types.Text),
+    'TimeField': simple(types.Time),
 }
 
 
@@ -70,9 +67,11 @@ def generate_tables(metadata):
         model_fields = [
             (f, f.model if f.model != model else None)
             for f in model._meta.get_fields()
-            if not f.is_relation
-                or f.one_to_one
-                or (f.many_to_one and f.related_model)
+            if (
+                not f.is_relation or
+                f.one_to_one or
+                (f.many_to_one and f.related_model)
+            )
         ]
         private_fields = model._meta.private_fields
         for field, parent_model in model_fields:
@@ -89,7 +88,9 @@ def generate_tables(metadata):
                     typ = DATA_TYPES[internal_type](field)
                     if not isinstance(typ, (list, tuple)):
                         typ = [typ]
-                    columns.append(Column(field.column,
-                            *typ, primary_key=field.primary_key))
-
+                    columns.append(
+                        Column(
+                            field.column, *typ, primary_key=field.primary_key
+                        )
+                    )
         Table(name, metadata, *columns)

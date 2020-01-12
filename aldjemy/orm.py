@@ -1,11 +1,10 @@
-import warnings
 from sqlalchemy import orm
-import django
-from django.db.models.fields.related import (ForeignKey, OneToOneField,
-        ManyToManyField)
+
+from django.conf import settings
 from django.db import connections, router
 from django.db.backends import signals
-from django.conf import settings
+from django.db.models.fields.related import (
+    ForeignKey, OneToOneField, ManyToManyField)
 
 from .core import get_meta, get_engine, Cache
 from .table import get_all_django_models, generate_tables
@@ -20,7 +19,7 @@ def get_session(alias='default', recreate=False, **kwargs):
     return connection.sa_session
 
 
-def new_session(sender, connection, **kw):
+def new_session(sender, connection, **kwargs):
     if connection.alias in settings.DATABASES:
         get_session(alias=connection.alias, recreate=True)
 
@@ -38,8 +37,10 @@ def _extract_model_attrs(metadata, model, sa_models):
     name = model._meta.db_table
     qualname = (metadata.schema + '.' + name) if metadata.schema else name
     table = tables[qualname]
-    fks = [t for t in model._meta.fields
-             if isinstance(t, (ForeignKey, OneToOneField))]
+    fks = [
+        t for t in model._meta.fields
+        if isinstance(t, (ForeignKey, OneToOneField))
+    ]
     attrs = {}
     rel_fields = fks + list(model._meta.many_to_many)
 
@@ -50,7 +51,7 @@ def _extract_model_attrs(metadata, model, sa_models):
             attrs[f.name] = orm.column_property(table.c[f.column])
 
     for fk in rel_fields:
-        if not fk.column in table.c and not isinstance(fk, ManyToManyField):
+        if fk.column not in table.c and not isinstance(fk, ManyToManyField):
             continue
 
         parent_model = get_remote_field(fk).model
@@ -68,9 +69,12 @@ def _extract_model_attrs(metadata, model, sa_models):
         p_table = tables[p_table_qualname]
         p_name = parent_model_meta.pk.column
 
-        disable_backref = fk.remote_field.related_name and fk.remote_field.related_name.endswith('+')
+        disable_backref = (
+            fk.remote_field.related_name and
+            fk.remote_field.related_name.endswith('+')
+        )
         backref = (fk.remote_field.related_name.lower().strip('+')
-                    if fk.remote_field.related_name else None)
+                   if fk.remote_field.related_name else None)
         if not backref and not disable_backref:
             backref = model._meta.object_name.lower()
             if not isinstance(fk, OneToOneField):
@@ -113,7 +117,9 @@ def _extract_model_attrs(metadata, model, sa_models):
 
 def prepare_models():
     metadata = get_meta()
-    models = [model for model in get_all_django_models() if not model._meta.proxy]
+    models = [
+        model for model in get_all_django_models() if not model._meta.proxy
+    ]
     Cache.sa_models = construct_models(metadata)
     cache_models = {}
     for model in models:
@@ -132,7 +138,8 @@ def construct_models(metadata):
     if not metadata.tables:
         generate_tables(metadata)
     tables = metadata.tables
-    models = [model for model in get_all_django_models() if not model._meta.proxy]
+    models = [
+        model for model in get_all_django_models() if not model._meta.proxy]
 
     sa_models_by_django_models = {}
 
@@ -172,6 +179,6 @@ class BaseSQLAModel:
     @classmethod
     def query(cls, *args, **kwargs):
         alias = getattr(cls, 'alias', 'default')
-        if a or kw:
+        if args or kwargs:
             return get_session(alias).query(*args, **kwargs)
         return get_session(alias).query(cls)

@@ -1,8 +1,9 @@
 import time
 import warnings
 from collections import deque
-from django.db import connections
+
 from django.conf import settings
+from django.db import connections
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.pool import NullPool
 from sqlalchemy.pool import _ConnectionRecord as _ConnectionRecordBase
@@ -25,6 +26,7 @@ class CacheType(type):
 
 class Cache(metaclass=CacheType):
     """Module level cache"""
+
     engines = {}
 
 
@@ -101,7 +103,7 @@ class _ConnectionRecord(_ConnectionRecordBase):
 
         self.alias = alias
         self.wrap = False
-        #pool.dispatch.first_connect.exec_once(self.connection, self)
+        # pool.dispatch.first_connect.exec_once(self.connection, self)
         pool.dispatch.connect(self.connection, self)
         self.wrap = True
         # TODO: Check. super call is missed?
